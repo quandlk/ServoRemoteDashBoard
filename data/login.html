@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Servo Dashboard</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(#F1FAFF, #CBE4FF);
+        }
+        .login-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #151A2D;
+        }
+        .login-container label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #151A2D;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-container button:hover {
+            background: #4338ca;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter Username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter Password" required>
+            <button type="submit" class="login-button">Login</button>
+        </form>
+    </div>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function showFlashMessage(message, type = 'success') {
+            const flash = document.createElement('div');
+            flash.className = `flash-message flash-${type}`;
+            flash.textContent = message;
+            flash.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 12px 20px; 
+                border-radius: 8px; color: #fff; font-size: 1rem; z-index: 1000; 
+                opacity: 0; transform: translateY(-20px); 
+                animation: slideIn 0.3s ease forwards, slideOut 0.3s ease 4s forwards;
+                min-width: 200px; line-height: 1.5; transition: top 0.3s ease;
+            `;
+            flash.style.background = type === 'success' ? '#2ecc71' : type === 'error' ? '#e74c3c' : '#f39c12';
+            document.body.appendChild(flash);
+
+            setTimeout(() => flash.remove(), 4500);
+        }
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            fetch('/login', {
+                method: 'POST',
+                body: new URLSearchParams({ username, password }),
+                credentials: 'include' // Đảm bảo gửi cookie
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Lấy session ID từ cookie (nếu cần)
+                    document.cookie.split('; ').find(row => row.startsWith('sessionID='));
+                    window.location.href = '/'; // Chuyển hướng để tải dashboard
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                showFlashMessage('Login failed', 'error');
+            });
+        });
+
+        
+
+    </script>
+</body>
+</html>

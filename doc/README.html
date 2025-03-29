@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif;
+    font-size: 14px;
+    padding: 0 26px;
+    line-height: 22px;
+    word-wrap: break-word;
+    background-color: #1e1e1e; /* Nền tối */
+    color: #ffffff; /* Chữ trắng */
+}
+
+h1, h2, h3 {
+    font-weight: normal;
+    color: #ffffff; /* Tiêu đề trắng */
+}
+
+a {
+    color: #4da8ff; /* Link màu xanh nhạt */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #80c0ff; /* Link khi hover sáng hơn */
+}
+
+hr {
+    border: 0;
+    height: 2px;
+    border-bottom: 2px solid #444444; /* Đường kẻ xám tối */
+}
+
+table {
+    border-collapse: collapse;
+    color: #ffffff; /* Chữ trong bảng trắng */
+}
+
+table > thead > tr > th {
+    text-align: left;
+    border-bottom: 1px solid #555555; /* Viền bảng xám tối */
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+    padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+    border-top: 1px solid #555555; /* Viền giữa các hàng xám tối */
+}
+
+blockquote {
+    margin: 0 7px 0 5px;
+    padding: 0 16px 0 10px;
+    border-left: 5px solid #007acc; /* Viền blockquote xanh đậm */
+    background: rgba(255, 255, 255, 0.05); /* Nền blockquote nhạt */
+    color: #d0d0d0; /* Chữ trong blockquote sáng nhẹ */
+}
+
+code {
+    font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace;
+    font-size: 1em;
+    line-height: 1.357em;
+    color: #d4d4d4; /* Mã code trắng nhạt */
+}
+
+pre {
+    background-color: #2d2d2d; /* Nền code tối */
+    border: 1px solid #444444; /* Viền code xám tối */
+    border-radius: 3px;
+    overflow-x: auto;
+    padding: 16px;
+    color: #d4d4d4; /* Chữ trong pre trắng nhạt */
+}
+
+pre code {
+    color: #d4d4d4; /* Chữ trong code trắng nhạt */
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Tomorrow Night Theme */
+.hljs {
+    display: block;
+    overflow-x: auto;
+    color: #c5c8c6; /* Màu chữ chính trong code */
+    background: #1d1f21; /* Nền code tối */
+    padding: 0.5em;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #969896; /* Bình luận xám */
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+    color: #cc6666; /* Đỏ nhạt */
+}
+
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+    color: #de935f; /* Cam nhạt */
+}
+
+.hljs-attribute {
+    color: #f0c674; /* Vàng nhạt */
+}
+
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+    color: #b5bd68; /* Xanh lá nhạt */
+}
+
+.hljs-title,
+.hljs-section {
+    color: #81a2be; /* Xanh dương nhạt */
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #b294bb; /* Tím nhạt */
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark' /* Chuyển sang theme tối cho Mermaid */
+    });
+  </script>
+<h2 id="dashboard">Dashboard</h2>
+<p>Điều khiển 03 động cơ dùng để khởi động bơm khí nén được cài đặt tương ứng. Và các chức năng liên quan:</p>
+<ul>
+<li>Đăng nhập để điều khiển</li>
+<li>Đổi mật khẩu đăng nhập</li>
+<li>Đổi mạng wifi</li>
+<li>Điều chỉnh góc di chuyển của cơ cấu điều khiển</li>
+<li>Hỗ trợ điều khiển có xác thực qua API</li>
+</ul>
+<img src="Home.png" width="800" height="380"/>
+<h3 id="khuy%C3%AAn-c%C3%A1o">Khuyên cáo:</h3>
+<p>Để đảm báo các tính năng và trải nghiệm được ổn định nhất. Sử dụng với các phiên bản trình duyệt bằng hoặc lớn hơn theo bảng dưới:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Trình duyệt</th>
+<th style="text-align:left">Edge</th>
+<th style="text-align:left">Firefox</th>
+<th style="text-align:left">Chrome</th>
+<th style="text-align:left">Safari</th>
+<th style="text-align:left">Opera</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Icon</td>
+<td style="text-align:left"><img src="https://www.w3schools.com/images/compatible_edge2020.png"/></td>
+<td style="text-align:left"><img src="https://www.w3schools.com/images/compatible_firefox2020.png"/></td>
+<td style="text-align:left"><img src="https://www.w3schools.com/images/compatible_chrome2020.png"/></td>
+<td style="text-align:left"><img src="https://www.w3schools.com/images/compatible_safari2020.png"/></td>
+<td style="text-align:left"><img src="https://www.w3schools.com/images/compatible_opera2020.png"/></td>
+</tr>
+<tr>
+<td style="text-align:left">Phiên bản</td>
+<td style="text-align:left">93</td>
+<td style="text-align:left">92</td>
+<td style="text-align:left">93</td>
+<td style="text-align:left">15.4</td>
+<td style="text-align:left">79</td>
+</tr>
+</tbody>
+</table>
+<h2 id="th%C3%B4ng-s%E1%BB%91-k%E1%BB%B9-thu%E1%BA%ADt">Thông số kỹ thuật</h2>
+<h3 id="h%E1%BB%99p-%C4%91i%E1%BB%81u-khi%E1%BB%83n">Hộp điều khiển</h3>
+<p>Bao gồm nguồn điện và bộ điều khiển được kết nối Wifi dùng để điều khiển cơ cấu ấn nút cho máy bơm khí nén.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Chỉ tiêu</th>
+<th style="text-align:left">Thông số</th>
+<th style="text-align:left">Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Kích thước</td>
+<td style="text-align:left">300 x 400 x 200</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Nguồn điện</td>
+<td style="text-align:left">220V AC/50Hz</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Công suất</td>
+<td style="text-align:left">30 Walt</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Chuẩn wifi</td>
+<td style="text-align:left">IEEE 802.11b / g / n</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Băng tần</td>
+<td style="text-align:left">2.4 GHz</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Băng thông</td>
+<td style="text-align:left">150 Mbps</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">Cơ cấu điều khiển</td>
+<td style="text-align:left">03</td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="c%C6%A1-c%E1%BA%A5u-%C4%91i%E1%BB%81u-khi%E1%BB%83n">Cơ cấu điều khiển</h3>
+<p>Bao gồm 03 cơ cấu điều khiển dùng để ấn nút khởi động khi có yêu cầu từ người dùng qua trình diều khiển Dashboard.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Chỉ tiêu</th>
+<th style="text-align:left">Thông số</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Kích thước</td>
+<td style="text-align:left">300 x 150 x 100</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">Góc di chuyển</td>
+<td style="text-align:left">0-180 độ</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">Điện áp</td>
+<td style="text-align:left">5V DC</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">Từ tính</td>
+<td style="text-align:left">Có</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="th%C3%B4ng-s%E1%BB%91-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh-ban-%C4%91%E1%BA%A7u">Thông số mặc định ban đầu</h2>
+<h3 id="th%C3%B4ng-tin-wifi">Thông tin Wifi</h3>
+<p>Router ban đầu cần được cấu hình đúng tên wifi (SSID) và mật khẩu như mặc định. Để có thể cấp phát IP Local và truy cập Dashboard. Thông tin Wifi có thể thay đổi trong cấu hình Dashboard.</p>
+<p><strong>SSID: Nifc<br>
+Mật khẩu: Nifc</strong></p>
+<h3 id="th%C3%B4ng-tin-%C4%91%C4%83ng-nh%E1%BA%ADp">Thông tin đăng nhập</h3>
+<p>Tài khoản mặc định ban đầu để đăng nhập vào Dashboard. Có thể thay đổi sau khi đăng nhập vào Dashboard - Profiles.</p>
+<p><strong>Tên đăng nhập: admin<br>
+Mật khẩu: 12345678</strong></p>
+<h2 id="an-to%C3%A0n">An toàn</h2>
+<p><strong>Thận trọng: Từ trường</strong><br>
+Nam châm tạo ra từ trường mạnh, có phạm vi ảnh hưởng rộng. Chúng có thể làm hỏng
+TV và máy tính xách tay, ổ cứng máy tính, thẻ tín dụng và thẻ ATM, phương tiện lưu trữ dữ liệu, đồng hồ cơ, máy trợ thính và loa.
+• Để nam châm tránh xa các thiết bị và vật thể có thể bị hư hỏng
+bởi từ trường mạnh</p>
+<p><strong>Caution: Magnetic field</strong><br>
+Magnets produce a far-reaching, strong magnetic field. They could dam
+age TVs and laptops, computer hard drives, credit and ATM cards, data
+storage media, mechanical watches, hearing aids and speakers.
+• Keep magnets away from devices and objects that could be damaged
+by strong magnetic fields</p>
+<img src="warning.jpg" width="600" height="200"/>
+</body>
+</html>
