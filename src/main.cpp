@@ -19,9 +19,9 @@ String ssid = "GauTruc";
 String password = "0967062707";
 
 Servo servo1, servo2, servo3;
-const int servoPin1 = 0; // Servo1 trên GPIO 0
-const int servoPin2 = 1; // Servo2 trên GPIO 1
-const int servoPin3 = 2; // Servo3 trên GPIO 2
+const int servoPin1 = 1; // Servo1 trên GPIO 1
+const int servoPin2 = 2; // Servo2 trên GPIO 2
+const int servoPin3 = 3; // Servo3 trên GPIO 3
 
 const int minUs = 500;
 const int maxUs = 2400;
