@@ -117,9 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchWithSession('/get-servo-settings')
         .then(response => response.json())
         .then(data => {
-          document.getElementById('servo1-angle').value = data.servo1 || 180;
+          document.getElementById('servo1-angle').value = data.servo1 || 0;
           document.getElementById('servo2-angle').value = data.servo2 || 180;
           document.getElementById('servo3-angle').value = data.servo3 || 180;
+          document.getElementById('servo4-angle').value = data.servo4 || 180;
+          document.getElementById('servo5-angle').value = data.servo5 || 180;
+          document.getElementById('servo6-angle').value = data.servo6 || 180;
+          document.getElementById('servo7-angle').value = data.servo7 || 180;
+          document.getElementById('servo8-angle').value = data.servo8 || 180;
         })
         .catch(error => {
           console.error('Error fetching servo settings:', error);
@@ -190,18 +195,32 @@ document.querySelectorAll('.nav-item').forEach(item => {
     }
 
     if (section === "settings") {
+      // Lấy và hiển thị góc tới
       fetchWithSession('/get-servo-settings')
         .then(response => response.json())
         .then(data => {
           for (let i = 1; i <= 8; i++) {
-            document.getElementById(`servo${i}-angle`).value = data[`servo${i}`] || 180;
+            document.getElementById(`servo${i}-angle`).value = data[`servo${i}`] || 0;
           }
         })
         .catch(error => {
           console.error('Error fetching servo settings:', error);
           showFlashMessage('Failed to load servo settings', 'error');
         });
-    }
+        
+      // Lấy và hiển thị góc home
+      fetchWithSession('/get-home-settings')
+        .then(response => response.json())
+        .then(data => {
+          for (let i = 1; i <= 8; i++) {
+            document.getElementById(`servo${i}-home`).value = data[`servo${i}`] || 90;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching home settings:', error);
+          showFlashMessage('Failed to load home settings', 'error');
+        });
+    }      
   });
 });
 
@@ -449,6 +468,37 @@ function saveServoSettings() {
     .catch(error => {
       console.error('Error saving servo settings:', error);
       showFlashMessage('Failed to save servo settings', 'error');
+    });
+}
+
+function saveHomeSettings() {
+  const homeAngles = {};
+  for (let i = 1; i <= 8; i++) {
+    const value = document.getElementById(`servo${i}-home`).value;
+    if (!value) {
+      showFlashMessage(`Please enter home angle for Servo ${i}`, 'warning');
+      return;
+    }
+    const angle = parseInt(value);
+    if (isNaN(angle) || angle < 0 || angle > 180) {
+      showFlashMessage(`Servo ${i} home angle must be between 0 and 180`, 'error');
+      return;
+    }
+    homeAngles[`servo${i}`] = angle;
+  }
+
+  fetchWithSession('/save-home-settings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(homeAngles)
+  })
+    .then(response => response.text())
+    .then(data => {
+      showFlashMessage(data, 'success');
+    })
+    .catch(error => {
+      console.error('Error saving home settings:', error);
+      showFlashMessage('Failed to save home settings', 'error');
     });
 }
 

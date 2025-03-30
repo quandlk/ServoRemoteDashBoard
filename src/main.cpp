@@ -18,11 +18,15 @@ String ssid = "GauTruc";
 String password = "0967062707";
 
 // Định nghĩa 8 servo trên GPIO 1-8
+
 const int servoPins[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 const int freq = 50;       // Tần số 50 Hz
 const int resolution = 14; // Giảm xuống 14-bit (tối đa cho ESP32-S3)
 const int minDuty = 410;   // Duty cho 0° (500µs tại 50 Hz, 14-bit)
 const int maxDuty = 2048;   // Duty cho 180° (2400µs tại 50 Hz, 14-bit)
+
+// Góc khởi tạo ban đầu (vị trí home) cho từng servo
+const int homeAngles[8] = {180, 180, 180, 16, 90, 90, 90, 90};
 
 // Hàm chuyển đổi góc thành duty cycle
 int angleToDuty(int angle) {
@@ -97,15 +101,42 @@ void moveServo(int servoId, int targetAngle) {
   Serial.printf("[%.3f] Starting servo %d movement to angle: %d\n", millis() / 1000.0, servoId, targetAngle);
   sendStatus();
 
-  for (int pos = 0; pos <= targetAngle; pos++) {
-    ledcWrite(channel, angleToDuty(pos));
-    delay(5);
-    yield();
+  // Lấy góc home từ Preferences
+  preferences.begin("credentials", true);
+  String homeKey = "servo" + String(servoId) + "Home";
+  int homeAngle = preferences.getInt(homeKey.c_str(), 90); // Mặc định 90 nếu lỗi
+  preferences.end();
+
+  // Di chuyển từ vị trí home đến targetAngle
+  int currentAngle = homeAngle;
+  if (currentAngle < targetAngle) {
+    for (int pos = currentAngle; pos <= targetAngle; pos++) {
+      ledcWrite(channel, angleToDuty(pos));
+      delay(5);
+      yield();
+    }
+  } else {
+    for (int pos = currentAngle; pos >= targetAngle; pos--) {
+      ledcWrite(channel, angleToDuty(pos));
+      delay(5);
+      yield();
+    }
   }
-  for (int pos = targetAngle; pos >= 0; pos--) {
-    ledcWrite(channel, angleToDuty(pos));
-    delay(5);
-    yield();
+
+  // Quay lại vị trí home
+  Serial.printf("[%.3f] Servo %d returning to home angle: %d\n", millis() / 1000.0, servoId, homeAngle);
+  if (targetAngle < homeAngle) {
+    for (int pos = targetAngle; pos <= homeAngle; pos++) {
+      ledcWrite(channel, angleToDuty(pos));
+      delay(5);
+      yield();
+    }
+  } else {
+    for (int pos = targetAngle; pos >= homeAngle; pos--) {
+      ledcWrite(channel, angleToDuty(pos));
+      delay(5);
+      yield();
+    }
   }
 
   servoMoving[channel] = false;
@@ -131,18 +162,6 @@ void setup() {
   esp_task_wdt_init(10, true);
   Serial.printf("[%.3f] Watchdog timer initialized with 10s timeout\n", millis() / 1000.0);
 
-  // Khởi tạo 8 servo bằng LEDC
-  for (int i = 0; i < 8; i++) {
-    if (ledcSetup(i, freq, resolution) == 0) { // Kiểm tra lỗi
-      Serial.printf("[%.3f] Error: Failed to setup LEDC channel %d\n", millis() / 1000.0, i);
-    } else {
-      ledcAttachPin(servoPins[i], i);
-      ledcWrite(i, angleToDuty(0));
-      Serial.printf("[%.3f] Servo %d initialized on GPIO %d\n", millis() / 1000.0, i + 1, servoPins[i]);
-    }
-  }
-  Serial.printf("[%.3f] 8 servos initialization attempted\n", millis() / 1000.0);
-
   if (!SPIFFS.begin(true)) {
     Serial.printf("[%.3f] Error: Failed to initialize SPIFFS\n", millis() / 1000.0);
     return;
@@ -155,11 +174,34 @@ void setup() {
     String key = "servo" + String(i) + "Angle";
     if (preferences.getInt(key.c_str(), -1) == -1) preferences.putInt(key.c_str(), 180);
   }
+  // Khởi tạo góc home mặc định nếu chưa có
+  int defaultHomeAngles[8] = {180, 180, 180, 180, 90, 90, 90, 90};
+  for (int i = 1; i <= 8; i++) {
+    String homeKey = "servo" + String(i) + "Home";
+    if (preferences.getInt(homeKey.c_str(), -1) == -1) {
+      preferences.putInt(homeKey.c_str(), defaultHomeAngles[i - 1]);
+      Serial.printf("[%.3f] Set default home angle for servo %d: %d\n", millis() / 1000.0, i, defaultHomeAngles[i - 1]);
+    }
+  }
   if (preferences.getString("wifi_ssid", "") == "") preferences.putString("wifi_ssid", ssid);
   else ssid = preferences.getString("wifi_ssid", ssid);
   if (preferences.getString("wifi_password", "") == "") preferences.putString("wifi_password", password);
   else password = preferences.getString("wifi_password", password);
   preferences.end();
+
+  // Khởi tạo 8 servo bằng LEDC
+  for (int i = 0; i < 8; i++) {
+    if (ledcSetup(i, freq, resolution) == 0) {
+      Serial.printf("[%.3f] Error: Failed to setup LEDC channel %d\n", millis() / 1000.0, i);
+    } else {
+      ledcAttachPin(servoPins[i], i);
+      String homeKey = "servo" + String(i + 1) + "Home";
+      int homeAngle = preferences.getInt(homeKey.c_str(), 90); // Mặc định 90 nếu lỗi
+      ledcWrite(i, angleToDuty(homeAngle));
+      Serial.printf("[%.3f] Servo %d initialized on GPIO %d at home angle %d\n", millis() / 1000.0, i + 1, servoPins[i], homeAngle);
+    }
+  }
+  Serial.printf("[%.3f] 8 servos initialization attempted\n", millis() / 1000.0);
 
   WiFi.begin(ssid.c_str(), password.c_str());
   int attempts = 0;
@@ -312,7 +354,55 @@ void setup() {
     String json = "{";
     for (int i = 1; i <= 8; i++) {
       String key = "servo" + String(i);
-      json += "\"" + key + "\":" + String(preferences.getInt((key + "Angle").c_str(), 180));
+      json += "\"" + key + "\":" + String(preferences.getInt((key + "Angle").c_str(), 0));
+      if (i < 8) json += ",";
+    }
+    json += "}";
+    preferences.end();
+    request->send(200, "application/json", json);
+  });
+
+  server.on("/save-home-settings", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, 
+  [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+    String clientSession = request->getHeader("Cookie") ? request->getHeader("Cookie")->value() : "";
+    if (clientSession.indexOf("session=" + sessionToken) == -1 || sessionToken == "") {
+      request->send(401, "text/plain", "Unauthorized");
+      return;
+    }
+    StaticJsonDocument<400> doc;
+    DeserializationError error = deserializeJson(doc, data, len);
+    if (error) {
+      request->send(400, "text/plain", "Invalid JSON");
+      return;
+    }
+    for (int i = 1; i <= 8; i++) {
+      String key = "servo" + String(i);
+      if (!doc[key].is<int>()) {
+        request->send(400, "text/plain", "Missing parameters for servo " + String(i));
+        return;
+      }
+    }
+    preferences.begin("credentials", false);
+    for (int i = 1; i <= 8; i++) {
+      String key = "servo" + String(i);
+      int angle = doc[key].as<int>();
+      preferences.putInt((key + "Home").c_str(), angle);
+    }
+    preferences.end();
+    request->send(200, "text/plain", "Home settings saved");
+  });
+
+  server.on("/get-home-settings", HTTP_GET, [](AsyncWebServerRequest *request){
+    String clientSession = request->getHeader("Cookie") ? request->getHeader("Cookie")->value() : "";
+    if (clientSession.indexOf("session=" + sessionToken) == -1 || sessionToken == "") {
+      request->send(401, "text/plain", "Unauthorized");
+      return;
+    }
+    preferences.begin("credentials", true);
+    String json = "{";
+    for (int i = 1; i <= 8; i++) {
+      String key = "servo" + String(i);
+      json += "\"" + key + "\":" + String(preferences.getInt((key + "Home").c_str(), 90));
       if (i < 8) json += ",";
     }
     json += "}";
