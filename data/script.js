@@ -193,9 +193,9 @@ document.querySelectorAll('.nav-item').forEach(item => {
       fetchWithSession('/get-servo-settings')
         .then(response => response.json())
         .then(data => {
-          document.getElementById('servo1-angle').value = data.servo1 || 180;
-          document.getElementById('servo2-angle').value = data.servo2 || 180;
-          document.getElementById('servo3-angle').value = data.servo3 || 180;
+          for (let i = 1; i <= 8; i++) {
+            document.getElementById(`servo${i}-angle`).value = data[`servo${i}`] || 180;
+          }
         })
         .catch(error => {
           console.error('Error fetching servo settings:', error);
@@ -322,9 +322,9 @@ ws.onmessage = (event) => {
   if (temperature) temperature.textContent = data.temperature || 'N/A';
 
   // Cập nhật trạng thái servo
-  updateServoStatus(1, data.servo1Moving);
-  updateServoStatus(2, data.servo2Moving);
-  updateServoStatus(3, data.servo3Moving);
+  for (let i = 1; i <= 8; i++) {
+    updateServoStatus(i, data[`servo${i}Moving`]);
+  }
 };
 
 ws.onclose = () => {
@@ -422,28 +422,20 @@ function changePassword() {
 }
 
 function saveServoSettings() {
-  const servo1Value = document.getElementById('servo1-angle').value;
-  const servo2Value = document.getElementById('servo2-angle').value;
-  const servo3Value = document.getElementById('servo3-angle').value;
-
-  if (!servo1Value || !servo2Value || !servo3Value) {
-    showFlashMessage('Please enter angles for all servos', 'warning');
-    return;
+  const angles = {};
+  for (let i = 1; i <= 8; i++) {
+    const value = document.getElementById(`servo${i}-angle`).value;
+    if (!value) {
+      showFlashMessage(`Please enter angle for Servo ${i}`, 'warning');
+      return;
+    }
+    const angle = parseInt(value);
+    if (isNaN(angle) || angle < 0 || angle > 180) {
+      showFlashMessage(`Servo ${i} angle must be between 0 and 180`, 'error');
+      return;
+    }
+    angles[`servo${i}`] = angle;
   }
-
-  const servo1 = parseInt(servo1Value);
-  const servo2 = parseInt(servo2Value);
-  const servo3 = parseInt(servo3Value);
-
-  if (isNaN(servo1) || isNaN(servo2) || isNaN(servo3) || 
-      servo1 < 0 || servo1 > 180 || 
-      servo2 < 0 || servo2 > 180 || 
-      servo3 < 0 || servo3 > 180) {
-    showFlashMessage('Angles must be numbers between 0 and 180', 'error');
-    return;
-  }
-
-  const angles = { servo1, servo2, servo3 };
 
   fetchWithSession('/save-servo-settings', {
     method: 'POST',

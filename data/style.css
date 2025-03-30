@@ -418,17 +418,14 @@ body.dark-mode input {
   100% { transform: scale(1); }
 }
 
-.servo1-icon {
-  color: #4f46e5;
-}
-
-.servo2-icon {
-  color: #2ecc71;
-}
-
-.servo3-icon {
-  color: #e74c3c;
-}
+.servo1-icon { color: rgb(79, 70, 229); }
+.servo2-icon { color: rgb(46, 204, 113); }
+.servo3-icon { color: rgb(231, 76, 60); }
+.servo4-icon { color: rgb(255, 236, 69); } /* Vàng */
+.servo5-icon { color: rgb(155, 89, 182); } /* Tím */
+.servo6-icon { color: rgb(52, 152, 219); } /* Xanh dương */
+.servo7-icon { color: rgb(230, 126, 34); } /* Cam */
+.servo8-icon { color: rgb(26, 188, 156); } /* Xanh ngọc */
 
 .info-widgets {
   flex: 1;

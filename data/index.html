@@ -79,7 +79,7 @@
         <div class="content-section home">
             <div class="tieu-de"> <h2>Dashboard</h2> </div>
             <div class="content-buttons">
-                <h3>On Buttons</h3>
+                <h3>ON Buttons</h3>
                 <div class="servo-controls">
                     <div class="button-widget" id="servo1" onclick="controlServo(1)">
                         <span class="material-symbols-rounded servo-icon servo1-icon">radio_button_unchecked</span>
@@ -92,6 +92,31 @@
                     <div class="button-widget" id="servo3" onclick="controlServo(3)">
                         <span class="material-symbols-rounded servo-icon servo3-icon">radio_button_unchecked</span>
                         Servo 3
+                    </div>
+                    <div class="button-widget" id="servo4" onclick="controlServo(4)">
+                        <span class="material-symbols-rounded servo-icon servo4-icon">radio_button_unchecked</span>
+                        Servo 4
+                    </div>
+                </div>
+            </div>
+            <div class="content-buttons">
+                <h3>OFF Buttons</h3>
+                <div class="servo-controls">
+                    <div class="button-widget" id="servo5" onclick="controlServo(5)">
+                        <span class="material-symbols-rounded servo-icon servo5-icon">radio_button_unchecked</span>
+                        Servo 5
+                    </div>
+                    <div class="button-widget" id="servo6" onclick="controlServo(6)">
+                        <span class="material-symbols-rounded servo-icon servo6-icon">radio_button_unchecked</span>
+                        Servo 6
+                    </div>
+                    <div class="button-widget" id="servo7" onclick="controlServo(7)">
+                        <span class="material-symbols-rounded servo-icon servo7-icon">radio_button_unchecked</span>
+                        Servo 7
+                    </div>
+                    <div class="button-widget" id="servo8" onclick="controlServo(8)">
+                        <span class="material-symbols-rounded servo-icon servo8-icon">radio_button_unchecked</span>
+                        Servo 8
                     </div>
                 </div>
             </div>
@@ -106,6 +131,11 @@
                     <p><div class="info-item">Servo 1 Status:   <span id="servo1-status">Idle</span></div></p>
                     <p><div class="info-item">Servo 2 Status:   <span id="servo2-status">Idle</span></div></p>
                     <p><div class="info-item">Servo 3 Status:   <span id="servo3-status">Idle</span></div></p>
+                    <p><div class="info-item">Servo 4 Status:   <span id="servo4-status">Idle</span></div></p>
+                    <p><div class="info-item">Servo 5 Status:   <span id="servo5-status">Idle</span></div></p>
+                    <p><div class="info-item">Servo 6 Status:   <span id="servo6-status">Idle</span></div></p>
+                    <p><div class="info-item">Servo 7 Status:   <span id="servo7-status">Idle</span></div></p>
+                    <p><div class="info-item">Servo 8 Status:   <span id="servo8-status">Idle</span></div></p>
                 </div>
             </aside>
         </div>
@@ -161,6 +191,26 @@
                     <div class="servo-row">
                         <label for="servo3-angle">Servo 3 Angle:</label>
                         <input type="number" id="servo3-angle" name="servo3-angle" min="0" max="180" placeholder="0-180">
+                    </div>
+                    <div class="servo-row">
+                        <label for="servo4-angle">Servo 4 Angle:</label>
+                        <input type="number" id="servo4-angle" name="servo4-angle" min="0" max="180" placeholder="0-180">
+                    </div>
+                    <div class="servo-row">
+                        <label for="servo5-angle">Servo 5 Angle:</label>
+                        <input type="number" id="servo5-angle" name="servo5-angle" min="0" max="180" placeholder="0-180">
+                    </div>
+                    <div class="servo-row">
+                        <label for="servo6-angle">Servo 6 Angle:</label>
+                        <input type="number" id="servo6-angle" name="servo6-angle" min="0" max="180" placeholder="0-180">
+                    </div>
+                    <div class="servo-row">
+                        <label for="servo7-angle">Servo 7 Angle:</label>
+                        <input type="number" id="servo7-angle" name="servo7-angle" min="0" max="180" placeholder="0-180">
+                    </div>
+                    <div class="servo-row">
+                        <label for="servo8-angle">Servo 8 Angle:</label>
+                        <input type="number" id="servo8-angle" name="servo8-angle" min="0" max="180" placeholder="0-180">
                     </div>
                     <button class="setting-button" onclick="saveServoSettings()">Save</button>
                 </div>
