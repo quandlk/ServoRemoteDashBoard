@@ -16,6 +16,7 @@
 
 String ssid = "GauTruc";
 String password = "0967062707";
+const char* hostname = "Servo_Controller";
 
 // Định nghĩa 8 servo trên GPIO 1-8
 
