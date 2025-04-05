@@ -20,14 +20,21 @@ const char* hostname = "Servo_Controller";
 
 // Định nghĩa 8 servo trên GPIO 1-8
 
-const int servoPins[8] = {1, 2, 3, 4, 5, 6, 7, 8};
-const int freq = 50;       // Tần số 50 Hz
-const int resolution = 14; // Giảm xuống 14-bit (tối đa cho ESP32-S3)
-const int minDuty = 410;   // Duty cho 0° (500µs tại 50 Hz, 14-bit)
-const int maxDuty = 2048;   // Duty cho 180° (2400µs tại 50 Hz, 14-bit)
+const int servoPins[8] = {5, 6, 7, 8, 9, 10, 11, 12};
 
-// Góc khởi tạo ban đầu (vị trí home) cho từng servo
-const int homeAngles[8] = {180, 180, 180, 16, 90, 90, 90, 90};
+/**
+ * Tần số PWM: freq = 50 Hz (chu kỳ 20ms).
+ * Độ phân giải: resolution = 14 (16384 mức).
+ * Giá trị duty cycle:
+ * minDuty = 410 (tương ứng 500µs).     500µs = 16384 * (0.5 / 20) = 409.6 ≈ 410.
+ * maxDuty = 2048 (tương ứng 2400µs).   2500µs = 16384 * (2.5 / 20) = 2048.
+*/
+
+const int freq = 50;       // Tần số 50 Hz
+const int resolution = 14; // 14-bit
+const int minDuty = 410;   // Duty cho 0° (500µs tại 50 Hz, 14-bit).
+const int maxDuty = 2048;   // Duty cho 180° (2400µs tại 50 Hz, 14-bit).
+
 
 // Hàm chuyển đổi góc thành duty cycle
 int angleToDuty(int angle) {
@@ -176,7 +183,7 @@ void setup() {
     if (preferences.getInt(key.c_str(), -1) == -1) preferences.putInt(key.c_str(), 180);
   }
   // Khởi tạo góc home mặc định nếu chưa có
-  int defaultHomeAngles[8] = {180, 180, 180, 180, 90, 90, 90, 90};
+  int defaultHomeAngles[8] = {90, 90, 90, 90, 90, 90, 90, 90};
   for (int i = 1; i <= 8; i++) {
     String homeKey = "servo" + String(i) + "Home";
     if (preferences.getInt(homeKey.c_str(), -1) == -1) {
